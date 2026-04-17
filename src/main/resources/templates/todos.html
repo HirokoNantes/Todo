@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>ToDo</title>
+</head>
+<body>
+
+<h1>Tous les tâches</h1>
+
+<form th:action="@{/add}" method="post" th:object="${todo}">
+    <input type="text" th:field="*{title}" placeholder="Nouvelle Tâche">
+    <button type="submit">Ajouter</button>
+</form>
+
+<ul>
+    <li th:each="todo : ${todos}">
+        <span th:text="${todo.title}"></span>
+        <a th:href="@{/edit/{id}(id=${todo.id})}">Modifier</a>
+        <form th:action="@{/delete/{id}(id=${todo.id})}" method="post">
+            <input type="hidden" name="id" th:value="${todo.id}">
+            <button type="submit">Supprimer</button>
+        </form>
+    </li>
+</ul>
+
+</body>
+</html>
