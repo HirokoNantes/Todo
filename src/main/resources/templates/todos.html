@@ -2,26 +2,98 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>ToDo</title>
+    <style>
+        body{
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        }
+        h1{
+            font-size: 3em;
+            margin: 30px 20px;
+        }
+        input[type="text"]{
+            padding: 6px 10px;
+            font-size: 16px; 
+        }
+        .ajouter{
+            margin: 20px;
+        }
+        .container{
+            max-width: 500px;
+        }
+        ol{
+            margin: 40px;
+        }
+        li{
+            display: flex;
+            align-items: center;
+            margin: 30px;
+        }
+        span{
+            font-size: 1.5em;
+            margin-left: 10px;
+            margin-right: 25px;
+            flex-grow: 1;
+        }
+        .modifier{
+            margin-right: 15px;
+            display: inline-block;
+            border: 2px solid #7973d3;
+            background-color: #8e94e9;
+
+        }
+        .supprimer{
+            display: inline-block;
+        }
+        .supprimer .btn{    
+            background-color: rgb(223, 123, 123);
+            border: 2px solid #ce4545;
+        }
+        .ajouter .btn{
+            background-color: rgb(117, 109, 109);
+            border: 2px solid #2b2828;
+        }
+        .btn{
+            text-decoration: none;
+            padding: 2px 4px;
+            border-radius: 3px;          
+            cursor: pointer;
+            font-size: 16px;
+            color: aliceblue;
+            font-weight: bold;
+            line-height: 1.2;
+            vertical-align: middle;
+        }
+    </style>
 </head>
 <body>
 
-<h1>Tous les tâches</h1>
+<h1>Toutes les tâches</h1>
 
-<form th:action="@{/add}" method="post" th:object="${todo}">
+<form class="ajouter" th:action="@{/add}" method="post" th:object="${todo}">
     <input type="text" th:field="*{title}" placeholder="Nouvelle Tâche">
-    <button type="submit">Ajouter</button>
+    <button class="btn" type="submit">Ajouter</button>
 </form>
 
-<ul>
-    <li th:each="todo : ${todos}">
-        <span th:text="${todo.title}"></span>
-        <a th:href="@{/edit/{id}(id=${todo.id})}">Modifier</a>
-        <form th:action="@{/delete/{id}(id=${todo.id})}" method="post">
-            <input type="hidden" name="id" th:value="${todo.id}">
-            <button type="submit">Supprimer</button>
-        </form>
-    </li>
-</ul>
+<div class="container">
+    <ul>
+        <li th:each="todo : ${todos}">
+            <span th:text="${todo.title}">Testekjfejojkdkdsjfkjqdfhiqehfihqefioqsfhdhihoikldsjfoihfoizdhfejoiqejfo</span>
+            <a class="btn modifier" th:href="@{/edit/{id}(id=${todo.id})}">Modifier</a>
+            <form class="supprimer" th:action="@{/delete/{id}(id=${todo.id})}" method="post" onsubmit="return confirm('Vous voulez vraiment supprimer?');">
+                <input type="hidden" name="id" th:value="${todo.id}">
+                <button class="btn" type="submit">Supprimer</button>
+            </form>
+        </li>
+        <li>
+            <span>Testekjfejojkdoiqejfo</span>
+            <a class="btn modifier">Modifier</a>
+            <form class="supprimer">
+                <button class="btn">Supprimer</button>
+            </form>
+        </li>
+    </ul>
+</div>
+
 
 </body>
 </html>
