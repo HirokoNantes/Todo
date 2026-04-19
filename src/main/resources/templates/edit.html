@@ -2,14 +2,50 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Page de modification</title>
+    <meta charset="UTF-8">
+    <style>
+        form{
+            margin: 30px 20px;
+        }
+        .form button{
+            text-decoration: none;
+            padding: 2px 4px;
+            border-radius: 3px;          
+            cursor: pointer;
+            font-size: 16px;
+            color: aliceblue;
+            font-weight: bold;
+            line-height: 1.2;
+            vertical-align: middle;
+            border: 2px solid #7973d3;
+            background-color: #8e94e9;
+        }
+        input[type="text"]{
+            padding: 6px 10px;
+            font-size: 16px; 
+        }
+        a{
+            margin: 20px;
+            font-size: 16px;
+            padding: 2px 4px;
+            text-decoration: none;
+            border-radius: 3px;
+            line-height: 1.2;
+            vertical-align: middle;
+            color: aliceblue;
+            font-weight: bold;
+            border: 2px solid #2b2828;
+            background-color: rgb(117, 109, 109);
+        }
+    </style>
 </head>
 <body>
 
-<form th:action="@{/update}" th:object="${todo}" method="post">
+<form class="form" th:action="@{/update}" th:object="${todo}" method="post">
     
     <input type="hidden" th:field="*{id}">
     
-    <input type="text" th:field="*{title}">
+    <input type="text" th:field="*{title}" placeholder="Task modifié">
     
     <button type="submit">Modifier</button>
 </form>

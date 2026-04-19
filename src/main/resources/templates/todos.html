@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>ToDo</title>
+    <meta charset="UTF-8">
     <style>
         body{
             font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
@@ -9,6 +10,7 @@
         h1{
             font-size: 3em;
             margin: 30px 20px;
+            user-select: none;
         }
         input[type="text"]{
             padding: 6px 10px;
@@ -33,6 +35,8 @@
             margin-left: 10px;
             margin-right: 25px;
             flex-grow: 1;
+            user-select: none;
+            word-break: break-all;
         }
         .modifier{
             margin-right: 15px;
@@ -76,8 +80,15 @@
 
 <div class="container">
     <ul>
+        <li>
+            <span>TestphrasepourlamodificationCSS.Asupprimeravantdelancerl'appli.</span>
+            <a class="btn modifier">Modifier</a>
+            <form class="supprimer">
+                <button class="btn">Supprimer</button>
+            </form>
+        </li>
         <li th:each="todo : ${todos}">
-            <span th:text="${todo.title}">Testekjfejojkdkdsjfkjqdfhiqehfihqefioqsfhdhihoikldsjfoihfoizdhfejoiqejfo</span>
+            <span th:text="${todo.title}">Test</span>
             <a class="btn modifier" th:href="@{/edit/{id}(id=${todo.id})}">Modifier</a>
             <form class="supprimer" th:action="@{/delete/{id}(id=${todo.id})}" method="post" onsubmit="return confirm('Vous voulez vraiment supprimer?');">
                 <input type="hidden" name="id" th:value="${todo.id}">
@@ -85,7 +96,7 @@
             </form>
         </li>
         <li>
-            <span>Testekjfejojkdoiqejfo</span>
+            <span>Test phrase pour la modification CSS. A supprimer avant de lancer l'appli.</span>
             <a class="btn modifier">Modifier</a>
             <form class="supprimer">
                 <button class="btn">Supprimer</button>
