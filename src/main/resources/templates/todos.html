@@ -16,11 +16,15 @@
             padding: 6px 10px;
             font-size: 16px; 
         }
+        input[type="date"]{
+            padding: 6px 10px;
+            font-size: 16px; 
+        }
         .ajouter{
             margin: 20px;
         }
         .container{
-            max-width: 500px;
+            max-width: 1100px;
         }
         ol{
             margin: 40px;
@@ -74,34 +78,43 @@
 <h1>Toutes les tâches</h1>
 
 <form class="ajouter" th:action="@{/add}" method="post" th:object="${todo}">
+    <label>Title:</label>
     <input type="text" th:field="*{title}" placeholder="Nouvelle Tâche">
+    <label>Délai:</label>
+    <input type="date" th:field="*{dueDate}">
     <button class="btn" type="submit">Ajouter</button>
 </form>
 
 <div class="container">
     <ul>
-        <li>
+        <!--<li>
             <span>TestphrasepourlamodificationCSS.Asupprimeravantdelancerl'appli.</span>
             <a class="btn modifier">Modifier</a>
             <form class="supprimer">
                 <button class="btn">Supprimer</button>
             </form>
-        </li>
+        </li>-->
         <li th:each="todo : ${todos}">
-            <span th:text="${todo.title}">Test</span>
+            <span th:text="${todo.title}">Test Title</span>
+            <span th:if="${todo.dueDate != null}" th:text="${todo.dueDate}">DUEDATE</span>
+            <th:block th:if="${todo.remainingDays != null}">
+                <span th:if="${todo.remainingDays < 0}" style="color:rgb(221, 58, 58);">Date dépassée</span>
+                <span th:if="${todo.remainingDays == 0 || todo.remainingDays == 1}" style="color:rgb(224, 155, 50);">Dernier délai</span>
+                <span th:if="${todo.remainingDays > 1}" th:text="'Dans ' + ${todo.remainingDays} + ' jours'" style="color:rgb(93, 127, 199);">Dans 00 Jours</span>
+            </th:block>
             <a class="btn modifier" th:href="@{/edit/{id}(id=${todo.id})}">Modifier</a>
             <form class="supprimer" th:action="@{/delete/{id}(id=${todo.id})}" method="post" onsubmit="return confirm('Vous voulez vraiment supprimer?');">
                 <input type="hidden" name="id" th:value="${todo.id}">
                 <button class="btn" type="submit">Supprimer</button>
             </form>
         </li>
-        <li>
+        <!--<li>
             <span>Test phrase pour la modification CSS. A supprimer avant de lancer l'appli.</span>
             <a class="btn modifier">Modifier</a>
             <form class="supprimer">
                 <button class="btn">Supprimer</button>
             </form>
-        </li>
+        </li>-->
     </ul>
 </div>
 

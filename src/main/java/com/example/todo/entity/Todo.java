@@ -2,6 +2,10 @@ package com.example.todo.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import org.springframework.format.annotation.DateTimeFormat;
+
 
 @Entity
 @Table(name = "todos")
@@ -12,6 +16,10 @@ public class Todo {
     private Long id;
 
     private String title;
+
+    @Column(name = "due_date", nullable = true)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dueDate;
 
     private boolean completed;
 
@@ -35,6 +43,13 @@ public class Todo {
     public void setId(Long id) { this.id = id; }
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
+    public void setDueDate(LocalDate dueDate) { this.dueDate = dueDate;}
+    public LocalDate getDueDate() {
+        if (dueDate == null) return null;
+        return dueDate;}
+    public Long getRemainingDays() {
+        if (dueDate == null) return null;
+        return ChronoUnit.DAYS.between(LocalDate.now(), dueDate);}
     public boolean isCompleted() { return completed; }
     public void setCompleted(boolean completed) { this.completed = completed; }
     public LocalDateTime getCreatedAt() { return createdAt;}
