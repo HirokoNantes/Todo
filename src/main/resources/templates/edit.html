@@ -7,8 +7,13 @@
         body{
             font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
         }
-        form{
+        h1{
+            font-size: 3em;
             margin: 30px 20px;
+            user-select: none;
+        }
+        form{
+            margin: 30px 0px 60px 20px;
         }
         .title-container{
             display: flex;
@@ -45,7 +50,7 @@
             font-size: 16px; 
         }
         a{
-            /* margin: 60px 20px; */
+            margin: 60px 20px;
             font-size: 16px;
             padding: 2px 4px;
             text-decoration: none;
@@ -54,32 +59,51 @@
             vertical-align: middle;
             color: aliceblue;
             font-weight: bold;
-            border: 2px solid #2b2828;
+            border: 2px solid #474444;
             background-color: rgb(117, 109, 109);
         }
     </style>
 </head>
 <body>
 
-<form class="form" th:action="@{/update}" th:object="${todo}" method="post">
-    
-    <input type="hidden" th:field="*{id}">
-    
-    <div class="title-container">
-        <label>Title:</label>
-        <input type="text" th:field="*{title}">
-    </div>
+    <h1>Modifier</h1>
 
-    <div class="date-container">
-        <label>Délai:</label>
-        <input type="date" th:field="*{dueDate}">
-    </div>
+    <!--Edit form-->
+    <form class="form" th:action="@{/update}" th:object="${todo}" method="post">
         
-    
-    <button type="submit">Modifier</button>
-</form>
+        <input type="hidden" th:field="*{id}">
+        
+        <div class="title-container">
+            <label>Titre:</label>
+            <input type="text" id="title" th:field="*{title}" required minlength="1" maxlength="99">
+        </div>
 
-<a href="/">Retourner à la page d'accueil</a>
+        <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}" style="color:red;"></div>
+        <div id="warning" style="color:red; display:none;">99 lettres maximum</div>
+
+        <div class="date-container">
+            <label>Délai:</label>
+            <input type="date" th:field="*{dueDate}" th:attr="min=${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}" max="2050-12-31">
+        </div>
+            
+        
+        <button type="submit">Modifier</button>
+    </form>
+
+    <a href="/">Retourner à la page d'accueil</a>
+
+    <script>
+        const input = document.getElementById("title");
+        const warning = document.getElementById("warning");
+
+        input.addEventListener("input", () => {
+            if (input.value.length > 99) {
+                warning.style.display = "block";
+            } else {
+                warning.style.display = "none";
+            }
+        });
+    </script>
 
 </body>
 </html>

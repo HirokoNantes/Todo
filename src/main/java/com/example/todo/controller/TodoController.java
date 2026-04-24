@@ -2,9 +2,11 @@ package com.example.todo.controller;
 
 import com.example.todo.entity.Todo;
 import com.example.todo.service.TodoService;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import jakarta.validation.Valid;
 
 @Controller
 @CrossOrigin(origins = "*")
@@ -18,13 +20,16 @@ public class TodoController {
 
     @GetMapping("/")
     public String list(Model model) {
-        model.addAttribute("todos", service.findAll());
+        model.addAttribute("todos", service.findAllOrderByDueDate());
         model.addAttribute("todo", new Todo());
         return "todos";
     }
 
     @PostMapping("/add")
-    public String add(Todo todo) {
+    public String add(@Valid @ModelAttribute Todo todo, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("todos", service.findAllOrderByDueDate());
+            return "todos";}
         service.save(todo);
         return "redirect:/";
     }
@@ -43,7 +48,8 @@ public class TodoController {
     }
 
     @PostMapping("/update")
-    public String update(Todo todo) {
+    public String update(@Valid @ModelAttribute Todo todo, BindingResult result) {
+        if (result.hasErrors()) {return "edit";}
         service.save(todo);
         return "redirect:/";
     }

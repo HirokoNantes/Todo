@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import org.springframework.format.annotation.DateTimeFormat;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 
 @Entity
@@ -15,6 +17,8 @@ public class Todo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Ajoutez le titre")
+    @Size(max = 99, message = "99 lettres maximum")
     private String title;
 
     @Column(name = "due_date", nullable = true)

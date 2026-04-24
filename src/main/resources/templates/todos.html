@@ -9,33 +9,65 @@
         }
         h1{
             font-size: 3em;
-            margin: 30px 20px;
+            margin: 60px 0px 0px 20px;
             user-select: none;
+        }
+        .ajouter{
+            display: flex;
+            align-items: center;
+            margin: 20px;
+            min-width: 600px;
+        }
+        label{
+            margin-right: 6px;
         }
         input[type="text"]{
             padding: 6px 10px;
+            margin-right: 15px;
             font-size: 16px; 
         }
         input[type="date"]{
             padding: 6px 10px;
+            margin-right: 15px;
             font-size: 16px; 
         }
-        .ajouter{
+        #warning{
             margin: 20px;
         }
         .container{
-            max-width: 1100px;
+            min-width: 1000px;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        ol{
-            margin: 40px;
+        ul{
+            margin-left:40px;
         }
         li{
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr 180px 200px 110px 110px;
             align-items: center;
-            margin: 30px;
+            justify-content: center;
+            margin: 0px 30px;
+            gap: 10px;
+            border-bottom: 1px solid #ddd;
+            padding: 20px 0;
+            height: 60px;
+        }
+        li:hover{
+            background-color: #ddd;
+        }
+        h2{
+            font-size: 1.7em;
+            margin-left: 10px;
+            margin-right: 25px;
+            flex-grow: 1;
+            user-select: none;
+            word-break: break-all;
         }
         span{
-            font-size: 1.5em;
+            font-size: 1.2em;
             margin-left: 10px;
             margin-right: 25px;
             flex-grow: 1;
@@ -58,9 +90,11 @@
         }
         .ajouter .btn{
             background-color: rgb(117, 109, 109);
-            border: 2px solid #2b2828;
+            border: 2px solid #474444;
         }
         .btn{
+            width: 95px;
+            text-align: center;
             text-decoration: none;
             padding: 2px 4px;
             border-radius: 3px;          
@@ -74,49 +108,71 @@
     </style>
 </head>
 <body>
+    <!--Add form-->
+    <form class="ajouter" th:action="@{/add}" method="post" th:object="${todo}">
+        <label for="title">Titre :</label>
+        <input type="text" id="title" th:field="*{title}" required minlength="1" maxlength="99" placeholder="Nouvelle Tâche">
+        <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}" style="color:red;"></div>
+        <label for="delai">Délai :</label>
+        <input type="date" id="delai" th:field="*{dueDate}" th:attr="min=${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}" max="2100-12-31">
+        <button class="btn" type="submit">Ajouter</button>
+    </form>
 
-<h1>Toutes les tâches</h1>
+    <!--Warning text length-->
+    <div id="warning" style="color:red; display:none;">99 lettres maximum</div>
 
-<form class="ajouter" th:action="@{/add}" method="post" th:object="${todo}">
-    <label>Title:</label>
-    <input type="text" th:field="*{title}" placeholder="Nouvelle Tâche">
-    <label>Délai:</label>
-    <input type="date" th:field="*{dueDate}">
-    <button class="btn" type="submit">Ajouter</button>
-</form>
+    <!--Task list-->
+    <div class="container">
+        <h1>Toutes les tâches</h1>
+        <ul>
+            <!--<li>
+                <span>TestphrasepourlamodificationCSS.Asupprimeravantdelancerl'appli.</span>
+                <a class="btn modifier">Modifier</a>
+                <form class="supprimer">
+                    <button class="btn">Supprimer</button>
+                </form>
+            </li>-->
+            <li th:each="todo : ${todos}">
+                <h2 th:text="${todo.title}">Test Title</h2>
+                <span th:text="${todo.dueDate != null ? todo.dueDate : ''}">0000-00-00</span>
+                
+                <div>
+                    <span th:if="${todo.remainingDays == null}" style="color:rgb(160, 154, 154);">Pas de délai</span>
+                    <th:block th:if="${todo.remainingDays != null}">
+                        <span th:if="${todo.remainingDays < 0}" style="color:rgb(221, 58, 58);">Date dépassée</span>
+                        <span th:if="${todo.remainingDays == 0 || todo.remainingDays == 1}" style="color:rgb(224, 155, 50);">Dernier délai</span>
+                        <span th:if="${todo.remainingDays > 1}" th:text="'Dans ' + ${todo.remainingDays} + ' jours'" style="color:rgb(93, 127, 199);"></span>
+                    </th:block>
+                </div>
 
-<div class="container">
-    <ul>
-        <!--<li>
-            <span>TestphrasepourlamodificationCSS.Asupprimeravantdelancerl'appli.</span>
-            <a class="btn modifier">Modifier</a>
-            <form class="supprimer">
-                <button class="btn">Supprimer</button>
-            </form>
-        </li>-->
-        <li th:each="todo : ${todos}">
-            <span th:text="${todo.title}">Test Title</span>
-            <span th:if="${todo.dueDate != null}" th:text="${todo.dueDate}">DUEDATE</span>
-            <th:block th:if="${todo.remainingDays != null}">
-                <span th:if="${todo.remainingDays < 0}" style="color:rgb(221, 58, 58);">Date dépassée</span>
-                <span th:if="${todo.remainingDays == 0 || todo.remainingDays == 1}" style="color:rgb(224, 155, 50);">Dernier délai</span>
-                <span th:if="${todo.remainingDays > 1}" th:text="'Dans ' + ${todo.remainingDays} + ' jours'" style="color:rgb(93, 127, 199);">Dans 00 Jours</span>
-            </th:block>
-            <a class="btn modifier" th:href="@{/edit/{id}(id=${todo.id})}">Modifier</a>
-            <form class="supprimer" th:action="@{/delete/{id}(id=${todo.id})}" method="post" onsubmit="return confirm('Vous voulez vraiment supprimer?');">
-                <input type="hidden" name="id" th:value="${todo.id}">
-                <button class="btn" type="submit">Supprimer</button>
-            </form>
-        </li>
-        <!--<li>
-            <span>Test phrase pour la modification CSS. A supprimer avant de lancer l'appli.</span>
-            <a class="btn modifier">Modifier</a>
-            <form class="supprimer">
-                <button class="btn">Supprimer</button>
-            </form>
-        </li>-->
-    </ul>
-</div>
+                <a class="btn modifier" th:href="@{/edit/{id}(id=${todo.id})}">Modifier</a>
+                <form class="supprimer" th:action="@{/delete/{id}(id=${todo.id})}" method="post" onsubmit="return confirm('Vous voulez vraiment supprimer?');">
+                    <input type="hidden" name="id" th:value="${todo.id}">
+                    <button class="btn" type="submit">Supprimer</button>
+                </form>
+            </li>
+            <!--<li>
+                <span>Test phrase pour la modification CSS. A supprimer avant de lancer l'appli.</span>
+                <a class="btn modifier">Modifier</a>
+                <form class="supprimer">
+                    <button class="btn">Supprimer</button>
+                </form>
+            </li>-->
+        </ul>
+    </div>
+
+    <script>
+        const input = document.getElementById("title");
+        const warning = document.getElementById("warning");
+
+        input.addEventListener("input", () => {
+            if (input.value.length > 99) {
+                warning.style.display = "block";
+            } else {
+                warning.style.display = "none";
+            }
+        });
+    </script>
 
 
 </body>

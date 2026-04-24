@@ -14,8 +14,8 @@ public class TodoService {
         this.repository = repository;
     }
 
-    public List<Todo> findAll() {
-        return repository.findAll();
+    public List<Todo> findAllOrderByDueDate() {
+        return repository.findAllByOrderByDueDateAsc();
     }
 
     public void save(Todo todo) {
